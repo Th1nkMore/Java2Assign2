@@ -18,13 +18,26 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
+/**
+ * The type Register.
+ */
 public class Register implements Initializable {
     private String Username;
 
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
     public String getUsername() {
         return Username;
     }
 
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
     public void setUsername(String username) {
         Username = username;
     }
@@ -40,6 +53,12 @@ public class Register implements Initializable {
     @FXML
     private Text password_re;
 
+    /**
+     * Initialize.
+     *
+     * @param location  the location
+     * @param resources the resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         confirm.setOnMouseClicked(event -> {
@@ -70,6 +89,13 @@ public class Register implements Initializable {
                 }
         });
     }
+
+    /**
+     * Switch to login.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void SwitchToLogin(MouseEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getClassLoader().getResource("Login.fxml"));

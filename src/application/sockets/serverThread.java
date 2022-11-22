@@ -16,22 +16,83 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+/**
+ * The type Server thread.
+ */
 public class serverThread extends Thread{
+    /**
+     * The Gson.
+     */
     Gson gson = new Gson();
+    /**
+     * The Random.
+     */
     Random random = new Random();
+    /**
+     * The Set opponent.
+     */
     boolean SetOpponent = false;
+    /**
+     * The Client name.
+     */
     String ClientName;
+    /**
+     * The Client socket.
+     */
     Socket clientSocket;
+    /**
+     * The Client data hash.
+     */
     final Hashtable<Socket, BufferedWriter> clientDataHash;
+    /**
+     * The Client name hash.
+     */
     final Hashtable<Socket, String> clientNameHash;
+    /**
+     * The Chess peer hash.
+     */
     final Hashtable<String, String> chessPeerHash;
+    /**
+     * The Chess boards.
+     */
     final Hashtable<Integer, String> chessBoards;
+    /**
+     * The Is client closed.
+     */
     boolean isClientClosed = false;
+    /**
+     * The Turn change.
+     */
     boolean TurnChange = false;
+    /**
+     * The Msg.
+     */
     String msg;
+    /**
+     * The Conn.
+     */
     public Connection conn = null;
+    /**
+     * The Logger.
+     */
     public java.util.logging.Logger logger;
+    /**
+     * The Start time.
+     */
     long startTime;
+
+    /**
+     * Instantiates a new Server thread.
+     *
+     * @param clientSocket   the client socket
+     * @param clientName     the client name
+     * @param clientDataHash the client data hash
+     * @param clientNameHash the client name hash
+     * @param chessPeerHash  the chess peer hash
+     * @param chessBoards    the chess boards
+     * @param conn           the conn
+     * @param logger         the logger
+     */
     public serverThread(Socket clientSocket,
                         String clientName,
                         Hashtable<Socket, BufferedWriter> clientDataHash,
@@ -51,6 +112,12 @@ public class serverThread extends Thread{
         this.ClientName = clientName;
     }
 
+    /**
+     * Feedback.
+     *
+     * @param received the received
+     * @throws SQLException the sql exception
+     */
     public void Feedback(String received) throws SQLException {
         if (received.startsWith("Hello")){
             this.startTime =  System.currentTimeMillis();
@@ -162,6 +229,13 @@ public class serverThread extends Thread{
             chessBoards.put(index, gson.toJson(new int[3][3]));
         }
     }
+
+    /**
+     * Reply to.
+     *
+     * @param msg      the msg
+     * @param username the username
+     */
     public void reply_to(String msg, String username){
         Socket target;
         BufferedWriter writer;
@@ -178,6 +252,14 @@ public class serverThread extends Thread{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Get hash key object.
+     *
+     * @param targetHash the target hash
+     * @param hashValue  the hash value
+     * @return the object
+     */
     public Object getHashKey(Hashtable targetHash, Object hashValue){
         Object hashKey;
         for (Enumeration enu = targetHash.keys(); enu.hasMoreElements();){
@@ -187,6 +269,12 @@ public class serverThread extends Thread{
         }
         return null;
     }
+
+    /**
+     * Reply.
+     *
+     * @param msg the msg
+     */
     public void reply(String msg){
         synchronized (clientDataHash){
             BufferedWriter writer = clientDataHash.get(clientSocket);
@@ -198,6 +286,10 @@ public class serverThread extends Thread{
             }
         }
     }
+
+    /**
+     * Close client.
+     */
     public void closeClient(){
         synchronized (chessPeerHash)
         {
@@ -246,6 +338,16 @@ public class serverThread extends Thread{
             }
         }
     }
+
+    /**
+     * Pc game end boolean.
+     *
+     * @param UserName the user name
+     * @param result   the result
+     * @param conn     the conn
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean PCGameEnd(String UserName, String result, Connection conn) throws SQLException {
         PreparedStatement insert = conn.prepareStatement("INSERT INTO \"Battles\" VALUES (Default,?,'PC',?)");
         insert.setString(1, UserName);
@@ -257,6 +359,17 @@ public class serverThread extends Thread{
         }
         return true;
     }
+
+    /**
+     * Pvp game end boolean.
+     *
+     * @param UserName1 the user name 1
+     * @param UserName2 the user name 2
+     * @param result    the result
+     * @param conn      the conn
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean PVPGameEnd(String UserName1,String UserName2, String result, Connection conn) throws SQLException {
         PreparedStatement insert = conn.prepareStatement("INSERT INTO \"Battles\" VALUES (Default,?,?,?)");
         insert.setString(1, UserName1);
@@ -269,6 +382,10 @@ public class serverThread extends Thread{
         }
         return true;
     }
+
+    /**
+     * Run.
+     */
     public void run()
     {
         BufferedReader reader;

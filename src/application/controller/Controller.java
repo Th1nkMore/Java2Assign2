@@ -27,10 +27,14 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import application.sockets.client;
+
 /**
  * The type Controller.
  */
 public class Controller implements Initializable {
+    /**
+     * The Gson.
+     */
     Gson gson = new Gson();
     /**
      * mode:
@@ -40,6 +44,9 @@ public class Controller implements Initializable {
      */
     private static final int port = 7777;
     private static int mode = 0;
+    /**
+     * The Random.
+     */
     Random random = new Random();
 
     /**
@@ -108,10 +115,20 @@ public class Controller implements Initializable {
     private static final int OFFSET = 15;
     private String op;
 
+    /**
+     * Gets op.
+     *
+     * @return the op
+     */
     public String getOp() {
         return op;
     }
 
+    /**
+     * Sets op.
+     *
+     * @param op the op
+     */
     public void setOp(String op) {
         this.op = op;
     }
@@ -215,6 +232,12 @@ public class Controller implements Initializable {
         }
     };
 
+    /**
+     * Initialize.
+     *
+     * @param location  the location
+     * @param resources the resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         timer.start();
@@ -436,6 +459,7 @@ public class Controller implements Initializable {
         line_b.setEndY((j + 1) * BOUND + OFFSET * 0.5);
         line_b.setStroke(Color.BLUE);
     }
+
     /**
      * Terminate int.
      *
@@ -473,6 +497,13 @@ public class Controller implements Initializable {
         }
         return num==9;
     }
+
+    /**
+     * My write.
+     *
+     * @param content the content
+     * @throws IOException the io exception
+     */
     public void MyWrite(String content) throws IOException {
         client.writer.write(content+"\n");
         client.writer.flush();
@@ -496,6 +527,12 @@ public class Controller implements Initializable {
         Reset();
     }
 
+    /**
+     * Switch to history.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void SwitchToHistory(MouseEvent actionEvent) throws IOException {
         Reset();
         client.setWaiting(false);
@@ -526,6 +563,12 @@ public class Controller implements Initializable {
 //        System.out.println(base_square.getChildren());
         base_square.getChildren().remove(5,base_square.getChildren().size());
     }
+
+    /**
+     * Refresh.
+     *
+     * @throws IOException the io exception
+     */
     public void Refresh() throws IOException {
         MyWrite("UserList");
         ArrayList<String> UserList = gson.fromJson(client.reader.readLine(), ArrayList.class);
@@ -533,6 +576,14 @@ public class Controller implements Initializable {
         UserList.forEach(playlist.getItems()::add);
         result1.setText("Player List refreshed..");
     }
+
+    /**
+     * Compare int [ ].
+     *
+     * @param chessBoard1 the chess board 1
+     * @param chessBoard2 the chess board 2
+     * @return the int [ ]
+     */
     public int[] compare(int[][] chessBoard1, int[][] chessBoard2){
         if (chessBoard1==null || chessBoard2==null){
             return new int[] {-1,-1};

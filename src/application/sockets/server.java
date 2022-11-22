@@ -10,14 +10,45 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * The type Server.
+ */
 public class server {
+    /**
+     * The Term.
+     */
     String term = null;
+    /**
+     * The Num.
+     */
     int num;
+    /**
+     * The Client data hash.
+     */
     Hashtable<Socket, BufferedWriter> clientDataHash = new Hashtable<>(50);
+    /**
+     * The Client name hash.
+     */
     Hashtable<Socket, String> clientNameHash = new Hashtable<>(50);
+    /**
+     * The Chess peer hash.
+     */
     Hashtable<String, String> chessPeerHash = new Hashtable<>(50);
+    /**
+     * The Chess boards.
+     */
     Hashtable<Integer, String> chessBoards = new Hashtable<>(50);
+    /**
+     * The Logger.
+     */
     java.util.logging.Logger logger =  java.util.logging.Logger.getLogger(this.getClass().getName());
+
+    /**
+     * Instantiates a new Server.
+     *
+     * @param port the port
+     * @throws IOException the io exception
+     */
     public server(int port) throws IOException {
 
         //Preparation: Read config
@@ -98,9 +129,26 @@ public class server {
 
 
     }
+
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     * @throws IOException the io exception
+     */
     public static void main(String[] args) throws IOException {
         server server = new server(7777);
     }
+
+    /**
+     * Check login boolean.
+     *
+     * @param UserName the user name
+     * @param password the password
+     * @param conn     the conn
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean CheckLogin(String UserName, String password, Connection conn) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM \"Users\" WHERE username = ?");
         stmt.setString(1,UserName);
@@ -113,6 +161,16 @@ public class server {
         stmt.close();
         return real_pwd.equals(password);
     }
+
+    /**
+     * Check register boolean.
+     *
+     * @param UserName the user name
+     * @param pwd      the pwd
+     * @param conn     the conn
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean CheckRegister(String UserName, String pwd, Connection conn) throws SQLException {
         PreparedStatement insert = conn.prepareStatement("INSERT INTO \"Users\" VALUES (Default,?,?)");
         insert.setString(1,UserName);
@@ -127,6 +185,14 @@ public class server {
         return true;
     }
 
+    /**
+     * Get history array list.
+     *
+     * @param UserName the user name
+     * @param conn     the conn
+     * @return the array list
+     * @throws SQLException the sql exception
+     */
     public static ArrayList<String> GetHistory(String UserName, Connection conn) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM \"Battles\" WHERE \"Player1\" = ? ORDER BY id");
         stmt.setString(1,UserName);
@@ -150,6 +216,13 @@ public class server {
         writer.write(content+"\n");
         writer.flush();
     }
+
+    /**
+     * Terminate int.
+     *
+     * @param chessBoard the chess board
+     * @return the int
+     */
     public static int terminate(int[][] chessBoard){
 
         //check rows and columns

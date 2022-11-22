@@ -5,13 +5,32 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * The type Client thread.
+ */
 public class clientThread extends Thread{
+    /**
+     * The Gson.
+     */
     Gson gson = new Gson();
+    /**
+     * The Client.
+     */
     public client client;
+
+    /**
+     * Instantiates a new Client thread.
+     *
+     * @param client the client
+     */
     public clientThread(client client) {
         this.client = client;
 
     }
+
+    /**
+     * Run.
+     */
     public void run()
     {
         while (true)
